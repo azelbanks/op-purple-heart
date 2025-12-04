@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OP: PURPLE HEART // ADMIN MODE</title>
+    <title>OP: PURPLE HEART // TERMINAL</title>
     <style>
         /* --- STYLE GENERAL & FONTS --- */
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500;700&display=swap');
@@ -27,19 +27,6 @@
             overflow-x: hidden;
             background-image: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #000 100%);
         }
-
-        /* BANDEAU TEST */
-        .test-banner {
-            background-color: var(--error);
-            color: #fff;
-            text-align: center;
-            padding: 10px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            border: 2px dashed white;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
 
         /* --- LAYOUT --- */
         .container {
@@ -285,11 +272,6 @@
 </head>
 <body>
 
-<div class="test-banner">
-    ⚠️ MODE TEST ACTIF : TOUTES LES DATES SONT DÉVERROUILLÉES (31 DÉC SIMULÉ) ⚠️<br>
-    N'ENVOIE PAS CE FICHIER A BRYAN.
-</div>
-
 <div class="container">
     <div class="sidebar">
         <div class="avatar">🛡️</div>
@@ -317,16 +299,12 @@
             <div class="progress-container">
                 <div class="progress-bar"><div class="progress-fill" id="main-progress"></div></div>
             </div>
-            <div style="margin-top:20px; font-size:0.7em; color:#666; text-align:center;">
-                [ DEBUG MODE: ENABLED ]<br>
-                <button onclick="localStorage.removeItem('solvedDays_bryan'); location.reload();" style="background:#333; color:#fff; border:none; padding:5px; margin-top:5px; cursor:pointer;">RESET PROGRESS</button>
-            </div>
         </div>
     </div>
 
     <div class="main-content">
-        <h1>> ./init_sequence.sh --debug</h1>
-        <p style="color: #666; margin-bottom: 30px;">// SYSTEM OVERRIDE. TIME RESTRICTIONS DISABLED.</p>
+        <h1>> ./init_sequence.sh --force</h1>
+        <p style="color: #666; margin-bottom: 30px;">// SYSTEM READY. WAITING FOR INPUT.</p>
 
         <div class="grid" id="calendar-grid">
             </div>
@@ -453,9 +431,9 @@
         31: { cat: "CODE_REVIEW", title: "GIT_COMMIT", desc: "Modifier dernier commit ?", hint: "amend", target: "AMEND", reward: "🎆 BONNE ANNÉE 2026." }
     };
 
-    // --- MODE ADMIN / TEST ---
-    // FORCE LA DATE AU 31 DECEMBRE POUR TOUT OUVRIR
-    const debugDate = new Date(2025, 11, 31); 
+    // --- ETAT DU JEU ---
+    // Mode Production : Utilise la date réelle de l'appareil
+    const debugDate = new Date(); 
     
     let solvedDays = JSON.parse(localStorage.getItem('solvedDays_bryan')) || [];
     let currentDay = null;
@@ -469,20 +447,20 @@
             createDayBtn(i, grid1);
         }
 
-        // --- HACK ADMIN : ON AFFICHE LE NIVEAU 2 DE FORCE ---
-        // if (solvedDays.includes(24)) { // Condition originale
+        // Si le jour 24 est résolu, on affiche le niveau 2
+        if (solvedDays.includes(24)) {
             document.getElementById('level-2-container').style.display = 'block';
             for (let i = 25; i <= 31; i++) {
                 createDayBtn(i, grid2);
             }
-        // }
+        }
         updateProgress();
     }
 
     function createDayBtn(day, container) {
         const btn = document.createElement('div');
         const isSolved = solvedDays.includes(day);
-        const isLocked = (debugDate.getMonth() !== 11) || (debugDate.getDate() < day); 
+        const isLocked = (debugDate.getMonth() !== 11) || (debugDate.getDate() < day); // Mois 11 = Décembre en JS
 
         btn.className = `day-btn ${isSolved ? 'solved' : ''} ${isLocked && !isSolved ? 'locked' : ''}`;
         
@@ -546,7 +524,8 @@
             setTimeout(() => {
                 showReward(data);
                 updateProgress();
-                // Si c'est le jour 24, on recharge normalement, mais ici c'est mode test
+                // Si c'est le jour 24, recharger pour afficher le niveau 2
+                if (currentDay === 24) location.reload();
             }, 2000);
         } else {
             // FAIL
