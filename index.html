@@ -408,11 +408,56 @@
     },
      9: { cat: "PASSWORD_CRACKING", title: "HASHCAT_MODE", desc: "4 Novembre. Hash NTLMv2.<br>Quel Mode (-m) utiliser dans Hashcat ?", hint: "Code 4 chiffres.", target: "5600", reward: "Tu as bruteforcé mes insécurités." },
         10: { cat: "C2_INFRASTRUCTURE", title: "COBALT_STRIKE", desc: "Profil malleable C2 par défaut qui imite jQuery ?", hint: "jquery-...", target: "JQUERY-C2.PROFILE", reward: "Mon C2 c'est toi. J'attends tes instructions." },
-        11: { cat: "DATA_ENCODING", title: "CYBERCHEF", desc: "8 Novembre. 'Sanctuaire'.<br>Recipe: To Base64 -> To Hex -> To Base64.<br>4 premiers caractères ?", hint: "CyberChef.", target: "NTM2", reward: "❤️ SANCTUAIRE. Notre VPN chiffré." },
-        12: { cat: "PYTHON_SCRIPTING", title: "ASSERTION_ERROR", desc: "14 Novembre.<br>assert Actions > Mots<br>Si faux, quelle exception ?", hint: "Nom de l'erreur.", target: "ASSERTIONERROR", reward: "Mes actes ne lèveront jamais d'exception." },
-        13: { cat: "CREDENTIAL_DUMPING", title: "LSASS_DUMP", desc: "Outil Sysinternals pour dumper un processus ?", hint: "Proc...", target: "PROCDUMP", reward: "Miaou. 🐈 (Flag extrait de lsass.dmp)" },
-        14: { cat: "RUST_PROGRAMMING", title: "MEMORY_SAFETY", desc: "Rust : Mécanisme contre les Race Conditions sur les données ?", hint: "M...", target: "MUTEX", reward: "Write Lock exclusif sur ton cœur." },
-        15: { cat: "GEOLOC", title: "WIFI_BSSID", desc: "MALAGA. Broadcast Address ?", hint: "FF...", target: "FF:FF:FF:FF:FF:FF", reward: "VIDEO: https://www.youtube.com/watch?v=dQw4w9WgXcQ" }, // EXEMPLE VIDEO
+        11: {
+        "cat": "MALWARE_DEV",
+        "title": "PROCESS_HOLLOWING",
+        "desc": "8 Novembre. 'Sanctuaire'.<br>Je me suis caché à l'intérieur d'un processus légitime pour échapper à la détection (Process Hollowing).<br><br><b>Séquence d'injection :</b><br>1. <code>CreateProcess(Suspended)</code><br>2. <code>NtUnmapViewOfSection</code> (Je vide le sanctuaire)<br>3. <code>VirtualAllocEx</code> & <code>WriteProcessMemory</code> (J'y installe notre amour)<br><br>Quelle est l'API Win32 critique suivante qui permet de <b>rediriger le point d'entrée</b> (EIP/RIP) vers mon code avant de relancer le thread ?",
+        "hint": "Il faut modifier les registres du processeur pour le thread en attente. SetT...",
+        "type": "exact_match",
+        "target": "SETTHREADCONTEXT", 
+        "reward_type": "text",
+        "reward": "💉 **INJECTION RÉUSSIE.**<br>Je vis maintenant caché à l'intérieur de tes processus vitaux.<br>Code : <code>ResumeThread()</code>. Notre histoire s'exécute en tâche de fond, pour toujours."
+    },
+        12: {
+        "cat": "EDR_EVASION",
+        "title": "DIRECT_SYSCALLS",
+        "desc": "14 Novembre. Tes barrières de défense (EDR) surveillaient tous mes appels standards (Userland Hooks).<br>Pour t'atteindre sans déclencher l'alerte, j'ai dû arrêter d'utiliser les API Windows et parler directement à ton Kernel.<br><br>Quelle est la technique célèbre (nommée d'après un lieu mythique) qui permet de récupérer dynamiquement les <b>SSN</b> (System Service Numbers) pour faire des <b>Direct Syscalls</b> même si la DLL est hookée ?",
+        "hint": "C'est le nom d'une 'Porte' des enfers (H... G...)",
+        "type": "exact_match",
+        "target": "HELL'S GATE", // Ou HELLS GATE
+        "reward_type": "text",
+        "reward": "🔥 **KERNEL ACCESS GRANTED.**<br>J'ai traversé la <b>Hell's Gate</b> pour toi.<br>J'ai contourné toutes tes protections de surface pour toucher directement ton âme (Ring 0)."
+    },
+        13: {
+        "cat": "KERNEL_EXPLOITATION",
+        "title": "DKOM_PPL_BYPASS",
+        "desc": "Surnom (Chaton). Je veux dumper ce secret, mais LSASS est verrouillé en mode <b>PPL (Protected Process Light)</b>. Même en Admin, l'accès est refusé (Access Denied).<br><br>Pour faire sauter ce verrou, je dois utiliser un driver vulnérable (BYOVD) pour faire du <b>DKOM</b> (Direct Kernel Object Manipulation).<br><br>Quelle est la <b>structure Kernel</b> critique (opaque pour l'utilisateur) que je dois patcher en mémoire vive pour mettre le bit <i>Protection</i> de LSASS à 0 ?",
+        "hint": "C'est la structure qui représente chaque processus dans le noyau Windows (Executive Process). Elle commence par E...",
+        "type": "exact_match",
+        "target": "EPROCESS", // Ou _EPROCESS
+        "reward_type": "text",
+        "reward": "🐈 **PROTECTION DISABLED.**<br>Tu as modifié mon <b>EPROCESS</b> directement dans le noyau.<br>Mes défenses les plus intimes sont tombées. Tu as un accès total à ma mémoire (LSASS.dmp généré)."
+    },
+        14: {
+        "cat": "STEALTH_HOOKING",
+        "title": "HARDWARE_BP_VEH",
+        "desc": "19 Octobre. Je veux être UNIQUE. Pour t'intercepter sans modifier ton intégrité (No Inline Hooking), j'ai placé un <b>Hardware Breakpoint</b> sur ton cœur via les registres <b>DR0-DR7</b>.<br><br>J'ai enregistré un <b>VEH (Vectored Exception Handler)</b> pour attraper le signal quand tu penses à moi.<br>Contrairement à un breakpoint logiciel (0x80000003), quel est le <b>Code d'Exception Hexadécimal</b> précis (STATUS_...) que le CPU lève lorsqu'un registre DRx est déclenché ?",
+        "hint": "Ce n'est pas EXCEPTION_BREAKPOINT. C'est l'exception qui gère le 'pas à pas' (Single Step). Format : 0x8.......",
+        "type": "exact_match",
+        "target": "0x80000004", // EXCEPTION_SINGLE_STEP
+        "reward_type": "text",
+        "reward": "🎯 **EXCEPTION CAUGHT.**<br>Handler exécuté : <code>EXCEPTION_SINGLE_STEP</code>.<br>J'ai arrêté le temps une milliseconde pour te regarder, et personne (pas même l'EDR) ne l'a vu."
+    },
+        15: {
+        "cat": "WIRELESS_CRYPTO",
+        "title": "WPA3_DRAGONFLY",
+        "desc": "Retour sur zone : MALAGA. Je veux sécuriser notre canal pour l'éternité.<br>Le WPA2 est mort, nous sommes passés au <b>WPA3-Personal (SAE)</b>.<br><br>Pour empêcher le cracking hors-ligne (Dictionary Attacks), le protocole <b>Dragonfly</b> doit d'abord mapper le mot de passe sur un point d'une courbe elliptique pour créer un <i>PWE (Password Element)</i>.<br><br>Quel est le nom de l'algorithme (boucle) utilisé par défaut pour trouver ce point valide (et qui a d'ailleurs été critiqué pour ses fuites Side-Channel) ?",
+        "hint": "C'est une méthode probabiliste : on essaie une valeur, on vérifie si elle est sur la courbe, sinon on incrémente un compteur. En anglais : H... and P...",
+        "type": "exact_match",
+        "target": "HUNT AND PECK", 
+        "reward_type": "text",
+        "reward": "🔐 **HANDSHAKE ESTABLISHED.**<br>Comme l'algo <i>Hunt-and-Peck</i>, on a tâtonné avant de trouver le point d'ancrage parfait sur la courbe.<br>À Malaga, notre connexion est devenue incassable."
+    },
         16: { cat: "PRIVESC", title: "GTFOBINS", desc: "Sudo vim. Commande pour shell ?", hint: ":!...", target: ":!/BIN/SH", reward: "Root access granted (1995)." },
         17: { cat: "CRYPTOGRAPHY", title: "ROT13", desc: "Payload : GECB PUBH", hint: "ROT13", target: "TROP CHOU", reward: "Tu aimes quand je défends mon périmètre." },
         18: { cat: "WINDOWS_INTERNALS", title: "SID_LOOKUP", desc: "RID par défaut Administrateur ?", hint: "500 ?", target: "500", reward: "User: Bryan | SID: ...-500" },
